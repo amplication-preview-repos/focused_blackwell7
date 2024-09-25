@@ -1,0 +1,81 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Student {
+  address        String?
+  calendarEvents CalendarEvent[]
+  createdAt      DateTime        @default(now())
+  email          String?
+  id             String          @id @default(cuid())
+  licenseType    String?
+  name           String?
+  payments       Payment[]
+  phone          String?
+  updatedAt      DateTime        @updatedAt
+}
+
+model Teacher {
+  calendarEvents CalendarEvent[]
+  createdAt      DateTime               @default(now())
+  email          String?
+  expertise      EnumTeacherExpertise[]
+  id             String                 @id @default(cuid())
+  name           String?
+  phone          String?
+  updatedAt      DateTime               @updatedAt
+}
+
+model Payment {
+  amount        Float?
+  createdAt     DateTime  @default(now())
+  date          DateTime?
+  id            String    @id @default(cuid())
+  paymentMethod String?
+  student       Student?  @relation(fields: [studentId], references: [id])
+  studentId     String?
+  updatedAt     DateTime  @updatedAt
+}
+
+model CalendarEvent {
+  car        Car?      @relation(fields: [carId], references: [id])
+  carId      String?
+  createdAt  DateTime  @default(now())
+  date       DateTime?
+  id         String    @id @default(cuid())
+  lessonType String?
+  student    Student?  @relation(fields: [studentId], references: [id])
+  studentId  String?
+  teacher    Teacher?  @relation(fields: [teacherId], references: [id])
+  teacherId  String?
+  time       DateTime?
+  updatedAt  DateTime  @updatedAt
+}
+
+model Secretary {
+  createdAt DateTime @default(now())
+  email     String?
+  id        String   @id @default(cuid())
+  name      String?
+  phone     String?
+  updatedAt DateTime @updatedAt
+}
+
+model Car {
+  availability   Boolean?
+  calendarEvents CalendarEvent[]
+  createdAt      DateTime        @default(now())
+  id             String          @id @default(cuid())
+  licensePlate   String?
+  model          String?
+  updatedAt      DateTime        @updatedAt
+}
+
+enum EnumTeacherExpertise {
+  Option1
+}
